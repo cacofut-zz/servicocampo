@@ -1,0 +1,36 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head th:include="page :: styles-global"></head>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Lista de usuários</title>
+</head>
+<body>
+	<div id="header" th:include="page :: header"></div>
+
+	<div class="container-fluid">
+		<div class="table-responsive">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<td>Usuário</td>
+						<td>Senha</td>
+						<td>Ativo</td>
+						<td>Remover</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="usuario : ${usuarios}">
+						<td>[[${usuario.usuario}]]</td>
+						<td>[[${usuario.senha}]]</td>
+						<td th:text="${usuario.ativo}?'ativo':'não ativo'"></td>
+						<td><a th:href="@{/admin/usuario/excluir/} + ${usuario.id}">Remover</a></td>
+						<td><a th:href="@{/admin/usuario/form(id=${usuario.id})}">alterar</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<div id="scripts" th:include="page :: scripts"></div>
+</body>
+</html>

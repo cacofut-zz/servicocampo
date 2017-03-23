@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head th:include="page :: styles-global"></head>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Insert title here</title>
+</head>
+<body>
+
+	<div id="header" th:include="page :: header"></div>
+
+	<div class="container-fluid">
+
+		<div class="row">
+			<div class="col-xs-12 col-md-4">
+				<img th:src="@{/resources/img/download.jpg}" />
+				<h1>Cristiano Carvalho Amaral</h1>
+			</div>
+
+			<div class="col-xs-12 col-md-8">
+				<div class="col-xs-12">
+					<div class="col-xs-12">ssadasd</div>
+					<div class="col-xs-12">
+						<div class="panel panel-default">
+							<!-- Default panel contents -->
+							<div class="panel-heading">Relatório Serviço de campo</div>
+							<div class="panel-body">
+								<p>
+									Mês de referência <input type="month" name="mes"
+										value="2017-03">
+								</p>
+							</div>
+
+							<!-- Table -->
+							<div class="table-responsive"> 
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th>Data</th>
+											<th>Livros</th>
+											<th>Folhetos</th>
+											<th>Brochuras</th>
+											<th>Horas Serviço Campo</th>
+											<th>Revistas Avulsas</th>
+											<th>Revisitas</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr>
+											<td><input readonly type="date" name="data"
+												value="2014-01-02" /></td>
+											<td>2</td>
+											<td>2</td>
+											<td>3</td>
+											<td><input readonly type="time" name="time" value="01:20" />
+											<td>1</td>
+											<td>3</td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="scripts" th:include="page :: scripts"></div>
+</body>
+</html>
