@@ -8,7 +8,7 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @Configuration
-@Import({ DataConfig.class })
+@Import({ DataConfig.class, CachingConfig.class })
 @ComponentScan(basePackages = { "br.com.servicocampo" }, excludeFilters = {
 		@Filter(type = FilterType.ANNOTATION, value = EnableWebMvc.class) })
 public class RootConfig {

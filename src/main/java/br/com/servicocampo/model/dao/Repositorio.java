@@ -9,7 +9,7 @@ import org.springframework.cache.annotation.Cacheable;
 import com.mysql.fabric.xmlrpc.base.Value;
 
 public interface Repositorio<T> {
-
+	
 	public List<T> list();
 	public T save(T objeto);
 	public int delete(Long objeto);

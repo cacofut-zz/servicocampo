@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -30,16 +31,51 @@ public class JdbcUsuarioRepositorio implements UsuarioRepositorio {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 
+	@Cacheable(value = "usuarioCache")
 	public List<Usuario> list() {
 		System.out.println( System.currentTimeMillis() );
 		return jdbcTemplate.query( SELECT_ALL_USUARIOS , new UsuarioRowMapper() );
 	}
-
+	
+	@CacheEvict(value="usuarioCache", allEntries = true )
 	public Usuario save(Usuario usuario) {
 		long id = insertUsuarioAndReturnId( usuario );
 		return new Usuario( id, usuario.getUsuario(), usuario.getSenha(), usuario.isAtivo() );
 	}
 	
+	@CacheEvict(value="usuarioCache", allEntries = true)
+	public int delete( Long id ) {
+		return jdbcTemplate.update( DELETE_USUARIO, id );
+	}
+
+	@CacheEvict(value="usuarioCache", allEntries = true)
+	public Usuario update(Usuario usuario) {
+		jdbcTemplate.update( UPDATE_USUARIO, 
+			usuario.getUsuario(),
+			usuario.getSenha(), 
+			usuario.isAtivo(), 
+			usuario.getId() );
+		return null;
+	}
+	
+	@Cacheable(value = "usuarioCache", key="#id")
+	public Usuario findOne(long id) {
+		System.out.println( "findOne()" );
+		return jdbcTemplate.queryForObject( SELECT_BY_ID_USUARIO, new UsuarioRowMapper(), id );
+	}
+	
+	public Usuario findByUserName(String username) {
+		System.out.println( "findByUserName()" );
+		return jdbcTemplate.queryForObject( SELECT_USER_BY_USERNAME, new UsuarioRowMapper(), username );
+	}
+
+	public boolean desativaUsuario(long id) {
+		return false;
+	}
+
+	public boolean ativaUsuario(long id) {
+		return false;
+	}
 	
 	private static final class UsuarioRowMapper implements RowMapper<Usuario>{
 
@@ -70,40 +106,5 @@ public class JdbcUsuarioRepositorio implements UsuarioRepositorio {
 		
 	}
 
-	public int delete( Long id ) {
-		return jdbcTemplate.update( DELETE_USUARIO, id );
-	}
-
-	public Usuario update(Usuario usuario) {
-		jdbcTemplate.update( UPDATE_USUARIO, 
-			usuario.getUsuario(),
-			usuario.getSenha(), 
-			usuario.isAtivo(), 
-			usuario.getId() );
-		return null;
-	}
-
-	public Usuario findOne(long id) {
-		System.out.println( "findOne()" );
-		return jdbcTemplate.queryForObject( SELECT_BY_ID_USUARIO, new UsuarioRowMapper(), id );
-	}
-
-	public Usuario findByUserName(String username) {
-		System.out.println( "findByUserName()" );
-		return jdbcTemplate.queryForObject( SELECT_USER_BY_USERNAME, new UsuarioRowMapper(), username );
-	}
-
-	public boolean desativaUsuario(long id) {
-		return false;
-	}
-
-	public boolean ativaUsuario(long id) {
-		return false;
-	}
-
-
-
-
-	
 
 }
