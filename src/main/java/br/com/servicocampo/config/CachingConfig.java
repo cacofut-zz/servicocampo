@@ -12,7 +12,7 @@ import net.sf.ehcache.CacheManager;
 @Configuration
 @EnableCaching
 public class CachingConfig {
-
+ //fgjhghg
 	@Bean
 	public EhCacheCacheManager cacheMager( CacheManager cm ){
 		return new EhCacheCacheManager(cm);
