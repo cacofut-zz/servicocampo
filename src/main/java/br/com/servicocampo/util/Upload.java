@@ -13,7 +13,9 @@ import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
-public class Upload {
+public abstract class Upload {
+	
+	private Midia midia;
 
 	private MultipartFile file;
 	@Autowired
@@ -21,10 +23,6 @@ public class Upload {
 	private String name;
 	private String send;
 
-	/** IMAGE UPLOAD */
-	private int width;
-	private int height;
-	private String image;
 
 	private String folder;
 	private static String baseDir;
@@ -58,19 +56,6 @@ public class Upload {
 		this.send = send;
 	}
 
-
-	public void setWidth(int width) {
-		this.width = width >= 0 ? width : 1024;		
-	}
-
-
-	public void setHeight(int height) {
-		this.height = height >= 0 ? height : 1024;
-	}
-
-	public void setImage(String image) {
-		this.image = image;
-	}
 
 	public void setFolder(String folder) {
 		this.folder = folder != null ? folder : "images";
@@ -109,19 +94,17 @@ public class Upload {
 
 	}// fim método
 	
+	public boolean upload( MultipartFile file ) throws IOException {	
+		return midia.upload();
+	}
 
 	public boolean image(MultipartFile file, String name, int width, int height, String folder) throws Exception {
 		
-		System.out.println( file.getOriginalFilename() );
-		
 		this.file = file;
 		setName(name);
-		setWidth(width);
-		setHeight(height);
 		setFolder(folder);
 		checkFolder(this.folder);
 		return uploadImage();
-
 	}
 
 	private void checkFolder(String folder) {
@@ -145,12 +128,12 @@ public class Upload {
 		String[] tipos = { "image/jpg", "image/jpeg", "image/pjpeg", "image/png", "image/x-png" };
 		boolean contem = Arrays.asList(tipos).contains(tipo);
 
-		if (contem) {
-
+		if ( contem ){
 			InputStream is = this.file.getInputStream();
 			String file    = this.file.getOriginalFilename();
-			byte[] buffer  = imgRS.read(is, file, this.width, this.height );
-			ByteToImage(buffer);
+			//byte[] buffer  = imgRS.read(is, file, this.width, this.height );
+			//salvar(buffer);
+			salvar(null);
 			return true;
 
 		} else {
@@ -160,7 +143,6 @@ public class Upload {
 	}
 
 	private void createFolder(String folder) {
-
 		File file = new File(Upload.baseDir + folder);
 		if (!file.exists() && !file.isDirectory()) {
 			file.mkdir();
@@ -172,7 +154,7 @@ public class Upload {
 
 	
 	private void setFileName() {
-
+		
 		String originalFileName = this.file.getOriginalFilename();
 		String suffix = originalFileName.substring(originalFileName.lastIndexOf("."), originalFileName.length());
 		String fileName = this.name + suffix;
@@ -200,6 +182,19 @@ public class Upload {
 	}
 	
 	
+	protected void salvar(byte[] bytes) throws Exception {
+		try {
+			FileOutputStream fos = new FileOutputStream(Upload.baseDir + this.send + this.name );
+			fos.write(bytes);
+			FileDescriptor fd = fos.getFD();
+			fos.flush();
+			fd.sync();
+			fos.close();
+		} catch (Exception e) {
+			throw new Exception("Erro ao salvar media");
+		}
+	}
+	
 
 	private byte[] imageToByte(String image) throws IOException {
 		InputStream is = null;
@@ -211,10 +206,6 @@ public class Upload {
 		return buffer;
 	}
 
-	@Override
-	public String toString() {
-		return "Upload [file=" + file + ", imgRS=" + imgRS + ", name=" + name + ", send=" + send + ", width=" + width
-				+ ", height=" + height + ", image=" + image + ", folder=" + folder + "]";
-	}
+	
 
 }

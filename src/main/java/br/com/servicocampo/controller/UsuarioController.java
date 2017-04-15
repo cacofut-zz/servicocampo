@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.com.servicocampo.model.Usuario;
 import br.com.servicocampo.web.service.UsuarioService;
@@ -41,12 +42,12 @@ public class UsuarioController {
 	}
 
 	@RequestMapping(value = "/adicionar", method = RequestMethod.POST)
-	public String adicionar(@Valid Usuario usuario, Errors erros) {
+	public String adicionar(@Valid Usuario usuario, Errors erros ) {
 
 		if (erros.hasErrors()) {
 			return "admin/usuario/form";
 		}
-		usuarioService.save(usuario);
+		//usuarioService.save(usuario);
 		return "redirect:/admin/usuario/list";
 	}
 
